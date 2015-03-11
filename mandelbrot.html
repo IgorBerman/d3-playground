@@ -25,27 +25,30 @@
 		<script type="text/javascript">
 
 			//Width and height
-			var w = 600;
-			var h = 400;
-			var padding = 1;
+			var w = 800;
+			var h = 600;
 			var dataset = [];					//Initialize empty array
-			var maxNumOfIts = 255;				//Number of dummy data points to create
-			var c = -3/4;
-			var mand = function(x, y, c) {
+			var maxNumOfIts = 256;				//Number of dummy data points to create
+
+			var mand = function(x, y) {
+				var x0 = x;
+				var y0 = y;
 				for (var i = 0; i < maxNumOfIts; i++) {					
-					var newX = x*x - y*y + c;
-					var newY = 2*x*y;
-					if (newX*newX + newY*newY >= 4) break;
+					var xx = x*x;
+					var yy = y*y;
+					if (xx+yy >= 4) break;
+					var newX = xx - yy + x0;
+					var newY = 2*x*y + y0;
 					x = newX;
 					y = newY;
 				}
 				return i;
 			};
 			
-			for (var x = -2; x<=2;x+=0.01) {
-				for(var y = -2; y<=2;y+=0.01) {
-					var grey = mand(x,y,c);
-					dataset.push([x,y,grey]);
+			for (var x = -2; x<=2;x+=0.005) {
+				for(var y = -2; y<=2;y+=0.005) {
+					var it = mand(x,y);
+					dataset.push([x,y,it]);
 				}
 			}
 
@@ -62,7 +65,7 @@
 								 .range([0,h]);
 
 			var cScale = d3.scale.ordinal()
-				.domain([0,255])
+				.domain([0,maxNumOfIts])
 				.range(colorbrewer.Blues[9]);
 			
 			//Define X axis
@@ -100,19 +103,20 @@
 			   		return 1;
 			   })
 			   .attr("fill", function(d) {
+					if(d[2]>=maxNumOfIts) return d3.rgb("#0E034A");
 					return d3.rgb(cScale(d[2]));
 			   });
 			
 			//Create X axis
 			svg.append("g")
 				.attr("class", "axis")
-				.attr("transform", "translate(0," + (h - padding) + ")")
+				.attr("transform", "translate(0," + h + ")")
 				.call(xAxis);
 			
 			//Create Y axis
 			svg.append("g")
 				.attr("class", "axis")
-				.attr("transform", "translate(" + padding + ",0)")
+				.attr("transform", "translate(0,0)")
 				.call(yAxis);
 
 		</script>
