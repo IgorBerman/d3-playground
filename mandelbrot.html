@@ -24,6 +24,7 @@
 	<body>
 		<h2>You can zoom-in with mouse down - pull - mouse up (defines zoom area top-left - bottom-right corners)</h2>
 		<h3 id="loading" style="visibility:collapse">Loading...</h3>
+		<div><input name="resetButton" type="button" value="Reset zoom" onclick="resetZoom()" /></div>
 		<script type="text/javascript">
 			var w0 = 300;
 			var h0 = 200;
@@ -54,14 +55,16 @@
 					var xMax = d3.max([sX,eX]);
 					var yMin = d3.min([sY,eY]);
 					var yMax = d3.max([sY,eY]);
-					svg.selectAll("*").remove();
 					
 					draw(xMin, xMax, yMin, yMax, w0, h0);
 				});	
 			
-			
+			var resetZoom = function() {
+				d3.select("#loading").style("visibility", "visible");
+				draw(minX0, maxX0, minY0, maxY0, w0, h0);
+			}
 			var draw = function(minX, maxX, minY, maxY, w, h) {
-				
+				svg.selectAll("*").remove();
 				console.log("draw " + minX + " " + maxX + " " + minY + " " + maxY + " "  + w + " "  + h);
 				var deltaX = (maxX - minX)/w;
 				var deltaY = (maxY - minY)/h;
@@ -150,5 +153,6 @@
 			};
 			draw(minX0, maxX0, minY0, maxY0, w0, h0);
 		</script>
+		
 	</body>
 </html>
