@@ -46,10 +46,14 @@
 				});
 			svg.on('mouseup', function(e) {
 					stop = d3.mouse(this);
-					var xMin = xScale.invert(start[0]);
-					var xMax = xScale.invert(stop[0]);
-					var yMin = yScale.invert(start[1]);
-					var yMax = yScale.invert(stop[1]);
+					var sX = xScale.invert(start[0]);
+					var sY = yScale.invert(start[1]);
+					var eX = xScale.invert(stop[0]);
+					var eY = yScale.invert(stop[1]);
+					var xMin = d3.min([sX,eX]);
+					var xMax = d3.max([sX,eX]);
+					var yMin = d3.min([sY,eY]);
+					var yMax = d3.max([sY,eY]);
 					svg.selectAll("*").remove();
 					
 					draw(xMin, xMax, yMin, yMax, w0, h0);
